@@ -1,697 +1,256 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Football Manager - Login</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: url('https://source.unsplash.com/random/1920x1080/?football-field') no-repeat center center fixed;
-            background-size: cover;
-            color: #333;
-        }
-        #login-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.5);
-        }
-        #login-form {
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.2);
-            text-align: center;
-            animation: fadeIn 1s ease-in-out;
-            max-width: 400px;
-            width: 100%;
-        }
-        #login-form h2 {
-            color: #28a745;
-            margin-bottom: 20px;
-        }
-        #password {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        #login-button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 12px;
-            cursor: pointer;
-            border-radius: 4px;
-            font-weight: bold;
-            transition: background-color 0.3s, transform 0.3s;
-            width: 100%;
-        }
-        #login-button:hover {
-            background-color: #218838;
-            transform: scale(1.05);
-        }
-        #error-message {
-            color: #dc3545;
-            margin-top: 10px;
-        }
-        #main-content {
-            display: none;
-        }
-        nav {
-            background: linear-gradient(to right, #28a745, #1e7e34);
-            color: white;
-            padding: 15px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: center;
-        }
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        nav li {
-            margin: 0 15px;
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            cursor: pointer;
-            font-weight: bold;
-            transition: color 0.3s, transform 0.3s;
-        }
-        nav a:hover {
-            color: #ffd700;
-            transform: scale(1.1);
-        }
-        nav a.active {
-            color: #ffd700;
-            border-bottom: 2px solid #ffd700;
-        }
-        section {
-            padding: 30px;
-            display: none;
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            animation: slideIn 0.5s ease-in-out;
-        }
-        section.active {
-            display: block;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            max-width: 400px;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            margin: 0 auto;
-        }
-        label {
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            transition: border 0.3s;
-        }
-        input:focus, select:focus {
-            border: 1px solid #28a745;
-        }
-        button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 12px;
-            cursor: pointer;
-            border-radius: 4px;
-            font-weight: bold;
-            transition: background-color 0.3s, transform 0.3s;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #218838;
-            transform: scale(1.05);
-        }
-        table {
-            margin-top: 30px;
-            border-collapse: collapse;
-            width: 100%;
-            max-width: 1000px;
-            background-color: white;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            overflow: hidden;
-            margin: 0 auto;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background: linear-gradient(to right, #28a745, #1e7e34);
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        tr:hover {
-            background-color: #e9ecef;
-            transform: scale(1.01);
-            transition: transform 0.2s;
-        }
-        .error {
-            color: #dc3545;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-        #chat-navbar {
-            background-color: #e9ecef;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        #messages {
-            border: 1px solid #ccc;
-            padding: 15px;
-            height: 400px;
-            overflow-y: scroll;
-            margin-bottom: 15px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
-        }
-        #messages div {
-            background: #f1f1f1;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            animation: fadeInMessage 0.5s ease-in-out;
-            opacity: 0;
-            animation-fill-mode: forwards;
-        }
-        #messages img {
-            max-width: 150px;
-            margin: 10px 0;
-            border-radius: 5px;
-            animation: fadeInMessage 0.5s ease-in-out;
-            opacity: 0;
-            animation-fill-mode: forwards;
-        }
-        #chat-input {
-            display: flex;
-            flex-wrap: wrap;
-        }
-        #nameInput {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px 0 0 4px;
-            margin-right: 5px;
-        }
-        #messageInput {
-            flex: 2;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 0;
-        }
-        #chat-input button {
-            border-radius: 0 4px 4px 0;
-            flex: 1;
-            min-width: 100px;
-        }
-        h2 {
-            color: #28a745;
-            border-bottom: 2px solid #28a745;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        #date-match {
-            font-size: 36px;
-            color: #fff;
-            background: linear-gradient(to right, #28a745, #1e7e34);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            text-align: center;
-            box-shadow: 0 0 20px rgba(40, 167, 69, 0.5);
-            animation: pulseSport 2s infinite;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-        #date-value {
-            color: #ffd700;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideIn {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes fadeInMessage {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes pulseSport {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        @media (max-width: 768px) {
-            nav ul {
-                flex-direction: column;
-            }
-            nav li {
-                margin: 10px 0;
-            }
-            section {
-                padding: 20px;
-            }
-            form {
-                max-width: 100%;
-            }
-            table {
-                font-size: 14px;
-            }
-            #chat-input {
-                flex-direction: column;
-            }
-            #nameInput, #messageInput, #chat-input button {
-                border-radius: 4px;
-                margin: 5px 0;
-                width: 100%;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Football Manager – Realtime</title>
+<style>
+  body{font-family:Arial,sans-serif;margin:0;background:#f4f4f4;color:#333}
+  #login{display:flex;justify-content:center;align-items:center;height:100vh;background:rgba(0,0,0,.6)}
+  #login form{background:#fff;padding:2rem;border-radius:8px;width:320px;text-align:center}
+  #login input{width:100%;padding:.6rem;margin:1rem 0;border:1px solid #ccc;border-radius:4px}
+  #login button{background:#28a745;color:#fff;border:none;padding:.7rem;width:100%;border-radius:4px;cursor:pointer}
+  nav{background:#28a745;color:#fff;padding:1rem;text-align:center}
+  nav a{color:#fff;margin:0 1rem;text-decoration:none;font-weight:bold}
+  nav a.active{color:#ffd700;border-bottom:2px solid #ffd700}
+  section{display:none;padding:2rem;background:#fff;margin:1rem auto;max-width:900px;border-radius:8px}
+  section.active{display:block}
+  table{width:100%;border-collapse:collapse;margin-top:1rem}
+  th,td{border:1px solid #ddd;padding:.6rem;text-align:left}
+  th{background:#28a745;color:#fff}
+  #messages{height:400px;overflow-y:auto;border:1px solid #ccc;padding:.5rem;background:#fafafa}
+  #messages div{margin:.4rem 0;padding:.5rem;background:#e9ecef;border-radius:4px}
+  #messages img{max-width:200px;margin:.5rem 0;border-radius:4px}
+</style>
 </head>
 <body>
-    <div id="login-container">
-        <div id="login-form">
-            <h2>Connexion Football Manager</h2>
-            <input type="password" id="password" placeholder="Entrez le mot de passe">
-            <button id="login-button">Se Connecter</button>
-            <div id="error-message"></div>
-        </div>
+
+<div id="login">
+  <form id="loginForm">
+    <h2>Connexion</h2>
+    <input type="password" id="pwd" placeholder="Mot de passe">
+    <button type="submit">Entrer</button>
+    <p id="loginErr" style="color:red"></p>
+  </form>
+</div>
+
+<div id="app" style="display:none">
+  <nav>
+    <a id="tab-accueil" class="active">Accueil</a>
+    <a id="tab-e1">Équipe 1</a>
+    <a id="tab-e2">Équipe 2</a>
+    <a id="tab-chat">Chat</a>
+  </nav>
+
+  <section id="accueil" class="active">
+    <h2>Date du match</h2>
+    <p id="matchDate">…</p>
+    <button id="editDateBtn">Modifier</button>
+  </section>
+
+  <!-- ================== EQUIPE 1 ================== -->
+  <section id="e1">
+    <h2>Équipe 1</h2>
+    <form id="formE1">
+      <input type="text" placeholder="Nom" id="nom1" required>
+      <input type="text" placeholder="Prénom" id="prenom1" required>
+      <input type="date" id="date1">
+      <select id="pres1"><option value="present">Présent</option><option value="absent">Absent</option></select>
+      <button type="submit">Ajouter</button>
+    </form>
+    <table id="tblE1"><thead><tr><th>Nom</th><th>Prénom</th><th>Date</th><th>Présence</th><th></th></tr></thead><tbody></tbody></table>
+  </section>
+
+  <!-- ================== EQUIPE 2 ================== -->
+  <section id="e2">
+    <h2>Équipe 2</h2>
+    <form id="formE2">
+      <input type="text" placeholder="Nom" id="nom2" required>
+      <input type="text" placeholder="Prénom" id="prenom2" required>
+      <input type="date" id="date2">
+      <select id="pres2"><option value="present">Présent</option><option value="absent">Absent</option></select>
+      <button type="submit">Ajouter</button>
+    </form>
+    <table id="tblE2"><thead><tr><th>Nom</th><th>Prénom</th><th>Date</th><th>Présence</th><th></th></tr></thead><tbody></tbody></table>
+  </section>
+
+  <!-- ================== CHAT ================== -->
+  <section id="chat">
+    <h2>Chat</h2>
+    <input type="file" id="photo" accept="image/*" style="display:none">
+    <button id="photoBtn">Photo</button>
+    <div id="messages"></div>
+    <div style="display:flex;margin-top:.5rem">
+      <input type="text" id="name" placeholder="Nom" style="flex:1">
+      <input type="text" id="msg" placeholder="Message" style="flex:3">
+      <button id="sendBtn">Envoyer</button>
     </div>
+  </section>
+</div>
 
-    <div id="main-content">
-        <nav>
-            <ul>
-                <li><a id="link-accueil" class="active">Accueil</a></li>
-                <li><a id="link-equipe1">Équipe 1</a></li>
-                <li><a id="link-equipe2">Équipe 2</a></li>
-                <li><a id="link-chat">Chat</a></li>
-            </ul>
-        </nav>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import { getDatabase, ref, push, onValue, set, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+  import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js";
+  import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
-        <section id="accueil" class="active">
-            <h2>Accueil</h2>
-            <p id="date-match">Date du Match: <span id="date-value"></span></p>
-            <button onclick="editDateMatch()">Éditer Date du Match</button>
-        </section>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDDaIWa5ev6kT7GTeVhiqDgT0Ht5271wOg",
+    authDomain: "matchwkw.firebaseapp.com",
+    databaseURL: "https://matchwkw-default-rtdb.firebaseio.com/",
+    projectId: "matchwkw",
+    storageBucket: "matchwkw.firebasestorage.app",
+    messagingSenderId: "423077744195",
+    appId: "1:423077744195:web:89fd8a51ac193b51c88ef6"
+  };
 
-        <section id="equipe1">
-            <h2>Équipe 1</h2>
-            <form id="form-equipe1">
-                <div id="error-equipe1" class="error"></div>
-                <label>Nom: <input type="text" id="nom1" name="nom"></label>
-                <label>Prénom: <input type="text" id="prenom1" name="prenom"></label>
-                <label>Date: <input type="date" id="date1" name="date"></label>
-                <label>Présence: 
-                    <select id="presence1" name="presence">
-                        <option value="present">Présent</option>
-                        <option value="absent">Absent</option>
-                    </select>
-                </label>
-                <button type="button" id="submit-equipe1">Ajouter</button>
-            </form>
-            <table id="table-equipe1">
-                <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Date</th>
-                        <th>Présence</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </section>
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const storage = getStorage(app);
+  const auth = getAuth(app);
 
-        <section id="equipe2">
-            <h2>Équipe 2</h2>
-            <form id="form-equipe2">
-                <div id="error-equipe2" class="error"></div>
-                <label>Nom: <input type="text" id="nom2" name="nom"></label>
-                <label>Prénom: <input type="text" id="prenom2" name="prenom"></label>
-                <label>Date: <input type="date" id="date2" name="date"></label>
-                <label>Présence: 
-                    <select id="presence2" name="presence">
-                        <option value="present">Présent</option>
-                        <option value="absent">Absent</option>
-                    </select>
-                </label>
-                <button type="button" id="submit-equipe2">Ajouter</button>
-            </form>
-            <table id="table-equipe2">
-                <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Date</th>
-                        <th>Présence</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </section>
+  // ---------- ANONYMOUS LOGIN ----------
+  signInAnonymously(auth).catch(err=>console.error('Auth error',err));
 
-        <section id="chat">
-            <h2>Chat</h2>
-            <div id="chat-navbar">
-                <input type="file" id="photoInput" accept="image/*" style="display: none;">
-                <button onclick="document.getElementById('photoInput').click()">Importer Photo</button>
-            </div>
-            <div id="messages"></div>
-            <div id="chat-input">
-                <input type="text" id="nameInput" placeholder="Votre Nom (requis)...">
-                <input type="text" id="messageInput" placeholder="Écrivez un message...">
-                <button onclick="sendMessage()">Envoyer</button>
-            </div>
-        </section>
-    </div>
+  // ---------- UI HELPERS ----------
+  const hide = el=>el.style.display='none';
+  const show = el=>el.style.display='block';
+  const $ = id=>document.getElementById(id);
+  const tabs = {accueil:'accueil', e1:'e1', e2:'e2', chat:'chat'};
+  Object.keys(tabs).forEach(k=>$(`tab-${k}`).onclick=()=>{openTab(tabs[k])});
+  function openTab(id){
+    Object.values(tabs).forEach(s=>$(s).classList.remove('active'));
+    Object.keys(tabs).forEach(t=>$(`tab-${t}`).classList.remove('active'));
+    $(id).classList.add('active');
+    $(`tab-${Object.keys(tabs).find(k=>tabs[k]===id)}`).classList.add('active');
+  }
 
-    <script type="module">
-        // Import Firebase SDKs
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-        import { getDatabase, ref, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
-        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-storage.js";
+  // ---------- LOGIN ----------
+  const LOGIN_PWD = 'matchwkw';
+  $('loginForm').onsubmit = e=>{
+    e.preventDefault();
+    if($('pwd').value===LOGIN_PWD){
+      hide($('login')); show($('app'));
+    }else{
+      $('loginErr').textContent='Mot de passe incorrect';
+    }
+  };
 
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDDaIWa5ev6kT7GTeVhiqDgT0Ht5271wOg",
-            authDomain: "matchwkw.firebaseapp.com",
-            databaseURL: "https://matchwkw-default-rtdb.firebaseio.com/",
-            projectId: "matchwkw",
-            storageBucket: "matchwkw.firebasestorage.app",
-            messagingSenderId: "423077744195",
-            appId: "1:423077744195:web:89fd8a51ac193b51c88ef6",
-            measurementId: "G-QXVVNHSPY1"
-        };
+  // ---------- MATCH DATE ----------
+  const dateRef = ref(db,'matchDate');
+  onValue(dateRef,snap=>{$('matchDate').textContent = snap.val()||'—';});
+  $('editDateBtn').onclick=()=>{
+    const pwd=prompt('Mot de passe admin');
+    if(pwd!==LOGIN_PWD) return alert('Incorrect');
+    const d=prompt('Nouvelle date (YYYY-MM-DD)');
+    if(d) set(dateRef,d);
+  };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-        const storage = getStorage(app);
-        const messagesRef = ref(database, 'messages');
+  // ---------- TEAMS ----------
+  const e1Ref = ref(db,'equipe1');
+  const e2Ref = ref(db,'equipe2');
+  let e1Data={}, e2Data={}, editKey=null, editTeam=null;
 
-        const loginPassword = "matchwkw";
-        const deletePassword = "matchwkw";
+  function render(team){
+    const data = team===1?e1Data:e2Data;
+    const tbody = $(`tblE${team}`).querySelector('tbody');
+    tbody.innerHTML='';
+    Object.entries(data).forEach(([k,v])=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td>${v.nom}</td><td>${v.prenom}</td><td>${v.date||''}</td>
+        <td>${v.presence==='present'?'Présent':'Absent'}</td>
+        <td>
+          <button onclick="startEdit(${team},'${k}')">Edit</button>
+          <button onclick="del(${team},'${k}')">Suppr</button>
+        </td>`;
+      tbody.appendChild(tr);
+    });
+  }
+  onValue(e1Ref,s=>{e1Data=s.val()||{}; render(1);});
+  onValue(e2Ref,s=>{e2Data=s.val()||{}; render(2);});
 
-        document.getElementById('login-button').addEventListener('click', () => {
-            const enteredPassword = document.getElementById('password').value;
-            if (enteredPassword === loginPassword) {
-                document.getElementById('login-container').style.display = 'none';
-                document.getElementById('main-content').style.display = 'block';
-            } else {
-                document.getElementById('error-message').textContent = 'Mot de passe incorrect.';
-            }
-        });
+  function startEdit(team,key){
+    const obj = (team===1?e1Data:e2Data)[key];
+    $(`nom${team}`).value = obj.nom;
+    $(`prenom${team}`).value = obj.prenom;
+    $(`date${team}`).value = obj.date||'';
+    $(`pres${team}`).value = obj.presence;
+    editKey=key; editTeam=team;
+    $(`formE${team}`).querySelector('button').textContent='Mettre à jour';
+  }
+  window.startEdit=startEdit;
 
-        // Gestion des onglets du navbar
-        const links = {
-            'link-accueil': 'accueil',
-            'link-equipe1': 'equipe1',
-            'link-equipe2': 'equipe2',
-            'link-chat': 'chat'
-        };
+  function del(team,key){
+    if(prompt('Mot de passe admin')!==LOGIN_PWD) return;
+    remove(ref(db,`equipe${team}/${key}`));
+  }
+  window.del=del;
 
-        Object.keys(links).forEach(linkId => {
-            document.getElementById(linkId).addEventListener('click', (e) => {
-                e.preventDefault();
-                Object.values(links).forEach(sectionId => {
-                    document.getElementById(sectionId).classList.remove('active');
-                });
-                Object.keys(links).forEach(lId => {
-                    document.getElementById(lId).classList.remove('active');
-                });
-                document.getElementById(links[linkId]).classList.add('active');
-                document.getElementById(linkId).classList.add('active');
-            });
-        });
+  function submitTeam(team){
+    const nom=$(`nom${team}`).value.trim();
+    const prenom=$(`prenom${team}`).value.trim();
+    const date=$(`date${team}`).value;
+    const pres=$(`pres${team}`).value;
+    if(!nom||!prenom) return alert('Nom + Prénom requis');
 
-        // Date du match
-        let matchDate = '';
-        document.getElementById('date-value').innerText = matchDate;
+    const payload={nom,prenom,date,presence:pres};
 
-        function editDateMatch() {
-            const password = prompt("Entrez le mot de passe pour éditer :");
-            if (password === deletePassword) {
-                const newDate = prompt("Entrez la nouvelle date (YYYY-MM-DD):");
-                if (newDate) {
-                    matchDate = newDate;
-                    document.getElementById('date-value').innerText = newDate;
-                }
-            } else {
-                alert("Mot de passe incorrect.");
-            }
-        }
+    if(editKey && editTeam===team){
+      set(ref(db,`equipe${team}/${editKey}`),payload);
+      editKey=null; editTeam=null;
+      $(`formE${team}`).querySelector('button').textContent='Ajouter';
+    }else{
+      push(ref(db,`equipe${team}`),payload);
+    }
+    $(`nom${team}`).value='';$(`prenom${team}`).value='';$(`date${team}`).value='';
+  }
+  $('formE1').onsubmit=e=>{e.preventDefault();submitTeam(1);}
+  $('formE2').onsubmit=e=>{e.preventDefault();submitTeam(2);}
 
-        // Données pour les équipes (local for now)
-        let equipe1Data = [];
-        let equipe2Data = [];
-        let currentEditEquipe1 = -1;
-        let currentEditEquipe2 = -1;
+  // ---------- CHAT ----------
+  const msgRef = ref(db,'messages');
+  const msgDiv = $('messages');
 
-        // Fonction pour vérifier si un nom/prénom existe dans une équipe
-        function existsInTeam(data, nom, prenom, excludeIndex = -1) {
-            return data.some((entry, i) => i !== excludeIndex && entry.nom.toLowerCase() === nom.toLowerCase() && entry.prenom.toLowerCase() === prenom.toLowerCase());
-        }
+  onValue(msgRef,snap=>{
+    msgDiv.innerHTML='';
+    const list=[];
+    snap.forEach(c=>list.push(c.val()));
+    list.sort((a,b)=>a.ts-b.ts);
+    list.forEach(m=>{
+      if(m.type==='text'){
+        const d=document.createElement('div');
+        d.innerHTML=`<strong>${m.name}:</strong> ${m.content}`;
+        msgDiv.appendChild(d);
+      }else if(m.type==='image'){
+        const i=document.createElement('img');
+        i.src=m.content;
+        msgDiv.appendChild(i);
+      }
+    });
+    msgDiv.scrollTop=msgDiv.scrollHeight;
+  });
 
-        // Fonction pour rendre le tableau
-        function renderTable(team) {
-            const data = team === 1 ? equipe1Data : equipe2Data;
-            const tbody = document.getElementById(`table-equipe${team}`).querySelector('tbody');
-            tbody.innerHTML = '';
-            data.forEach((entry, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${entry.nom}</td>
-                    <td>${entry.prenom}</td>
-                    <td>${entry.date || ''}</td>
-                    <td>${entry.presence === 'present' ? 'Présent' : 'Absent'}</td>
-                    <td>
-                        <button onclick="editEntry(${team}, ${index})">Éditer</button>
-                        <button onclick="deleteEntry(${team}, ${index})">Supprimer</button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
+  $('sendBtn').onclick=()=>{
+    const name=$('name').value.trim();
+    const txt=$('msg').value.trim();
+    if(!name) return alert('Nom requis');
+    if(txt){
+      push(msgRef,{type:'text',name,content:txt,ts:serverTimestamp()});
+      $('msg').value='';
+    }
+  };
+  $('msg').addEventListener('keypress',e=>{if(e.key==='Enter') $('sendBtn').click();});
 
-        // Fonction pour valider et ajouter/mettre à jour
-        function handleSubmit(team) {
-            const nomInput = document.getElementById(`nom${team}`);
-            const prenomInput = document.getElementById(`prenom${team}`);
-            const dateInput = document.getElementById(`date${team}`);
-            const presenceSelect = document.getElementById(`presence${team}`);
-            const errorDiv = document.getElementById(`error-equipe${team}`);
-            const submitBtn = document.getElementById(`submit-equipe${team}`);
-
-            const nom = nomInput.value.trim();
-            const prenom = prenomInput.value.trim();
-            const date = dateInput.value;
-            const presence = presenceSelect.value;
-
-            if (!nom || !prenom) {
-                errorDiv.textContent = 'Nom et Prénom sont requis.';
-                return;
-            }
-
-            const currentData = team === 1 ? equipe1Data : equipe2Data;
-            const currentEdit = team === 1 ? currentEditEquipe1 : currentEditEquipe2;
-
-            // Vérifier doublons dans la même équipe
-            if (existsInTeam(currentData, nom, prenom, currentEdit)) {
-                errorDiv.textContent = 'Ce nom et prénom existent déjà dans cette équipe.';
-                return;
-            }
-
-            // Vérifier si dans équipe 1 pour ajout à équipe 2
-            if (team === 2 && existsInTeam(equipe1Data, nom, prenom)) {
-                errorDiv.textContent = 'Ce nom et prénom existent déjà dans l\'équipe 1.';
-                return;
-            }
-
-            errorDiv.textContent = '';
-
-            if (currentEdit !== -1) {
-                // Mise à jour
-                currentData[currentEdit] = { nom, prenom, date, presence };
-                if (team === 1) currentEditEquipe1 = -1;
-                else currentEditEquipe2 = -1;
-                submitBtn.textContent = 'Ajouter';
-            } else {
-                // Ajout
-                currentData.push({ nom, prenom, date, presence });
-            }
-
-            renderTable(team);
-            nomInput.value = '';
-            prenomInput.value = '';
-            dateInput.value = '';
-            presenceSelect.value = 'present';
-        }
-
-        // Fonction pour éditer une entrée
-        function editEntry(team, index) {
-            const data = team === 1 ? equipe1Data : equipe2Data;
-            const entry = data[index];
-            const nomInput = document.getElementById(`nom${team}`);
-            const prenomInput = document.getElementById(`prenom${team}`);
-            const dateInput = document.getElementById(`date${team}`);
-            const presenceSelect = document.getElementById(`presence${team}`);
-            const submitBtn = document.getElementById(`submit-equipe${team}`);
-
-            nomInput.value = entry.nom;
-            prenomInput.value = entry.prenom;
-            dateInput.value = entry.date || '';
-            presenceSelect.value = entry.presence;
-
-            if (team === 1) currentEditEquipe1 = index;
-            else currentEditEquipe2 = index;
-
-            submitBtn.textContent = 'Mettre à jour';
-        }
-
-        // Fonction pour supprimer une entrée
-        function deleteEntry(team, index) {
-            const password = prompt("Entrez le mot de passe pour supprimer :");
-            if (password === deletePassword) {
-                const data = team === 1 ? equipe1Data : equipe2Data;
-                data.splice(index, 1);
-                renderTable(team);
-            } else {
-                alert("Mot de passe incorrect.");
-            }
-        }
-
-        // Événements pour les boutons submit
-        document.getElementById('submit-equipe1').addEventListener('click', () => handleSubmit(1));
-        document.getElementById('submit-equipe2').addEventListener('click', () => handleSubmit(2));
-
-        // Load messages from Firebase
-        onValue(messagesRef, (snapshot) => {
-            const messagesDiv = document.getElementById('messages');
-            messagesDiv.innerHTML = '';
-            const messages = [];
-            snapshot.forEach((childSnapshot) => {
-                messages.push(childSnapshot.val());
-            });
-            // Sort by timestamp
-            messages.sort((a, b) => a.timestamp - b.timestamp);
-            messages.forEach((msg) => {
-                if (msg.type === 'text') {
-                    const msgDiv = document.createElement('div');
-                    msgDiv.innerHTML = `<strong>${msg.name}:</strong> ${msg.content}`;
-                    messagesDiv.appendChild(msgDiv);
-                } else if (msg.type === 'image') {
-                    const img = document.createElement('img');
-                    img.src = msg.content;
-                    messagesDiv.appendChild(img);
-                }
-            });
-            scrollToBottom();
-        });
-
-        // Fonction pour envoyer un message dans le chat
-        function sendMessage() {
-            const nameInput = document.getElementById('nameInput');
-            const messageInput = document.getElementById('messageInput');
-            const name = nameInput.value.trim();
-            const message = messageInput.value.trim();
-
-            if (!name) {
-                alert('Veuillez entrer votre nom pour envoyer un message.');
-                return;
-            }
-
-            if (message) {
-                push(messagesRef, {
-                    type: 'text',
-                    name: name,
-                    content: message,
-                    timestamp: serverTimestamp()
-                });
-                messageInput.value = '';
-                scrollToBottom();
-            }
-        }
-
-        // Gestion de l'import de photo
-        document.getElementById('photoInput').addEventListener('change', (event) => {
-            const nameInput = document.getElementById('nameInput');
-            const name = nameInput.value.trim();
-
-            if (!name) {
-                alert('Veuillez entrer votre nom pour importer une photo.');
-                return;
-            }
-
-            const file = event.target.files[0];
-            if (file) {
-                const storageReference = storageRef(storage, 'images/' + file.name);
-                uploadBytes(storageReference, file).then((snapshot) => {
-                    getDownloadURL(storageReference).then((url) => {
-                        push(messagesRef, {
-                            type: 'image',
-                            name: name,
-                            content: url,
-                            timestamp: serverTimestamp()
-                        });
-                        scrollToBottom();
-                    });
-                });
-            }
-        });
-
-        // Faire défiler vers le bas du chat
-        function scrollToBottom() {
-            const messages = document.getElementById('messages');
-            messages.scrollTop = messages.scrollHeight;
-        }
-
-        // Expose functions to window for onclick attributes
-        window.editDateMatch = editDateMatch;
-        window.editEntry = editEntry;
-        window.deleteEntry = deleteEntry;
-        window.sendMessage = sendMessage;
-    </script>
+  // Photo upload
+  $('photoBtn').onclick=()=>$('photo').click();
+  $('photo').onchange=e=>{
+    const name=$('name').value.trim();
+    if(!name) return alert('Nom requis');
+    const file=e.target.files[0];
+    if(!file) return;
+    const sref = sRef(storage,'chat/'+Date.now()+'_'+file.name);
+    uploadBytes(sref,file).then(()=>getDownloadURL(sref))
+      .then(url=>push(msgRef,{type:'image',name,content:url,ts:serverTimestamp()}));
+  };
+</script>
 </body>
 </html>
